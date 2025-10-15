@@ -2,23 +2,35 @@
 ### BEGIN INIT INFO
 # Provides:          spooky_users
 # Required-Start:    $local_fs $remote_fs
-# Required-Stop:
 # Default-Start:     2 3 4 5
-# Default-Stop:
 # Short-Description: Adds spooky users
 ### END INIT INFO
 
 case "$1" in
   start)
     echo "Adding spooky users..."
+    
+    # -------------------
+    # Demon
+    # -------------------
     if ! id Demon >/dev/null 2>&1; then
-      adduser -D -s /bin/sh -u 1000 Demon
-      echo "Demon:demonsito" | chpasswd
+      mkdir -p /home/Demon
+      adduser -D -h /home/Demon -s /bin/sh -u 1000 Demon
+      chown -R Demon:Demon /home/Demon
+      DEMON_PASS='$6$spooky$S.LmPbRvX.LX93508iJF/A3gLMUJzKrGMYsmfjMayNq6T5LrtoktXrM5Y4bfp7Fscc1.K4AE/1bQfNdmKbodv0'
+      echo "Demon:$DEMON_PASS" | chpasswd -e
       echo "Demon created."
     fi
+    
+    # -------------------
+    # Ghost
+    # -------------------
     if ! id Ghost >/dev/null 2>&1; then
-      adduser -D -s /bin/sh -u 1001 Ghost
-      echo "Ghost:ghostcito" | chpasswd
+      mkdir -p /home/Ghost
+      adduser -D -h /home/Ghost -s /bin/sh -u 1001 Ghost
+      chown -R Ghost:Ghost /home/Ghost
+      GHOST_PASS='$6$spooky$XCCdPF0izTgXX9y7VFt.7g5rqKKTerwlhSpKz8qwfwPIuIC.4CpWaoWc38rPgpwiFBQ.61va1.NowGc6nrVWd1'
+      echo "Ghost:$GHOST_PASS" | chpasswd -e
       echo "Ghost created."
     fi
     ;;
@@ -26,5 +38,4 @@ case "$1" in
     echo "Usage: $0 start"
     ;;
 esac
-
 exit 0
